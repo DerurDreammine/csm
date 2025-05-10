@@ -36,7 +36,7 @@ torchaudio.save("audio.wav", audio.unsqueeze(0).cpu(), generator.sample_rate)
 ### VOICE CLONE
 Basic use:
 ```python
-from modules.tts.csm.generator import load_csm_1b
+from generator import load_csm_1b
 import torchaudio
 import torch
 
@@ -88,7 +88,7 @@ audio = generator.generate(
 ```
 Custom use:
 ```python
-from modules.tts.csm.generator import load_csm_1b
+from generator import load_csm_1b
 import torchaudio
 import torch
 
