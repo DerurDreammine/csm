@@ -1,3 +1,41 @@
+### FORK DOCUMENTATION
+# BASIC
+Basic use:
+```python
+from generator import load_csm_1b
+import torchaudio
+
+generator = load_csm_1b("./modules/tts/csm/model", device="cuda", tokenizer_name="./modules/tts/csm/model/lama")
+
+audio = generator.generate(
+    text="Hello from Sesame.",
+    speaker=0,
+    context=[],
+    max_audio_length_ms=10_000,
+)
+
+torchaudio.save("audio.wav", audio.unsqueeze(0).cpu(), generator.sample_rate)
+```
+
+Custom use:
+```python
+from generator import load_csm_1b
+import torchaudio
+
+generator = load_csm_1b("./model", device="cuda", tokenizer_name="./model/lama")
+
+audio = generator.generate(
+    text="Hello from Sesame.",
+    speaker=0,
+    context=[],
+    max_audio_length_ms=10_000,
+)
+
+torchaudio.save("audio.wav", audio.unsqueeze(0).cpu(), generator.sample_rate)
+```
+
+
+# ORIGINAL DOCUMENTATION
 # CSM
 
 **2025/03/13** - We are releasing the 1B CSM variant. The checkpoint is [hosted on Hugging Face](https://huggingface.co/sesame/csm_1b).
