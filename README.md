@@ -30,8 +30,8 @@ audio = generator.generate(
     context=[],
     max_audio_length_ms=10_000,
 )
-
 torchaudio.save("audio.wav", audio.unsqueeze(0).cpu(), generator.sample_rate)
+
 ```
 ### VOICE CLONE
 Basic use:
