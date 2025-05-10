@@ -7,7 +7,7 @@ cd csm
 pip install -r requirements.txt
 ```
 !!! IMPORTANT !!!    
-Go to: "python_dir/Lib/site-packages/silentcipher" and copy the server.py file here 
+Go to: "python_dir/Lib/site-packages/silentcipher" and copy with replace the server.py file here 
 
 ### BASIC
 Basic use:
