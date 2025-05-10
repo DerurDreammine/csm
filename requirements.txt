@@ -6,4 +6,4 @@ huggingface_hub
 moshi
 torchtune
 torchao
-silentcipher @ git+https://github.com/SesameAILabs/silentcipher@master
+silentcipher
