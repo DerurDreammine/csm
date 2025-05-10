@@ -1,5 +1,5 @@
-### FORK DOCUMENTATION
-# BASIC
+# FORK DOCUMENTATION
+### BASIC
 Basic use:
 ```python
 from generator import load_csm_1b
@@ -33,10 +33,117 @@ audio = generator.generate(
 
 torchaudio.save("audio.wav", audio.unsqueeze(0).cpu(), generator.sample_rate)
 ```
+### VOICE CLONE
+Basic use:
+```python
+from modules.tts.csm.generator import load_csm_1b
+import torchaudio
+import torch
 
+generator = load_csm_1b(device="cuda")
+
+
+from modules.tts.csm.generator import Segment
+
+speakers = [1, 2]
+transcripts = [   # Transcriptions of files
+    "Очередная малалетко у меня в лс. Очередная малалетко хочет со мной с... Очередная малалетко у меня в лс.",
+    "I don't wanna leave you out here in the open. I know that you're broken, baby, we're both broken. I'm gonna give you my heart, baby, please be careful. You're so fragile, I don't wanna be an asshole.",
+]
+audio_paths = [  # Your files
+    "1.mp3",
+    "2.mp3",
+]
+
+def load_audio(audio_path):
+    audio_tensor, sample_rate = torchaudio.load(audio_path)
+    audio_tensor = audio_tensor.mean(dim=0)
+    audio_tensor = torchaudio.functional.resample(
+        audio_tensor, orig_freq=sample_rate, new_freq=generator.sample_rate
+    )
+    return audio_tensor.to(torch.float32)
+
+
+segments = [
+    Segment(text=transcript, speaker=speaker, audio=load_audio(audio_path))
+    for transcript, speaker, audio_path in zip(transcripts, speakers, audio_paths)
+]
+
+
+# 1. spkr
+audio = generator.generate(
+    text="Me too, this is some cool stuff huh?",
+    speaker=1,
+    context=segments,
+    max_audio_length_ms=10_000,
+)
+
+# 2. spkr
+audio = generator.generate(
+    text="Me too, this is some cool stuff huh?",
+    speaker=2,
+    context=segments,
+    max_audio_length_ms=10_000,
+)
+```
+Custom use:
+```python
+from modules.tts.csm.generator import load_csm_1b
+import torchaudio
+import torch
+
+generator = load_csm_1b("./modules/tts/csm/model", device="cuda", tokenizer_name="./modules/tts/csm/model/llama")
+#generator = load_csm_1b("./modules/tts/csm/model/expressiva", device="cuda", tokenizer_name="./modules/tts/csm/model/llama")  # expressiva = whispering
+
+
+from modules.tts.csm.generator import Segment
+
+speakers = [1, 2]
+transcripts = [     # Transcriptions of files
+    "Очередная малалетко у меня в лс. Очередная малалетко хочет со мной с... Очередная малалетко у меня в лс.",
+    "I don't wanna leave you out here in the open. I know that you're broken, baby, we're both broken. I'm gonna give you my heart, baby, please be careful. You're so fragile, I don't wanna be an asshole.",
+]
+audio_paths = [   # Your files
+    "1.mp3",
+    "2.mp3",
+]
+
+def load_audio(audio_path):
+    audio_tensor, sample_rate = torchaudio.load(audio_path)
+    audio_tensor = audio_tensor.mean(dim=0)
+    audio_tensor = torchaudio.functional.resample(
+        audio_tensor, orig_freq=sample_rate, new_freq=generator.sample_rate
+    )
+    return audio_tensor.to(torch.float32)
+
+
+segments = [
+    Segment(text=transcript, speaker=speaker, audio=load_audio(audio_path))
+    for transcript, speaker, audio_path in zip(transcripts, speakers, audio_paths)
+]
+
+
+# 1. spkr
+audio = generator.generate(
+    text="Me too, this is some cool stuff huh?",
+    speaker=1,
+    context=segments,
+    max_audio_length_ms=10_000,
+)
+
+torchaudio.save("audio_1.wav", audio.unsqueeze(0).cpu(), generator.sample_rate)
+
+# 2. spkr
+audio = generator.generate(
+    text="Me too, this is some cool stuff huh?",
+    speaker=2,
+    context=segments,
+    max_audio_length_ms=10_000,
+)
+```
 
 # ORIGINAL DOCUMENTATION
-# CSM
+### CSM
 
 **2025/03/13** - We are releasing the 1B CSM variant. The checkpoint is [hosted on Hugging Face](https://huggingface.co/sesame/csm_1b).
 
