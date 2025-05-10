@@ -13,7 +13,6 @@ audio = generator.generate(
     context=[],
     max_audio_length_ms=10_000,
 )
-
 torchaudio.save("audio.wav", audio.unsqueeze(0).cpu(), generator.sample_rate)
 ```
 
@@ -31,7 +30,6 @@ audio = generator.generate(
     max_audio_length_ms=10_000,
 )
 torchaudio.save("audio.wav", audio.unsqueeze(0).cpu(), generator.sample_rate)
-
 ```
 ### VOICE CLONE
 Basic use:
@@ -77,6 +75,7 @@ audio = generator.generate(
     context=segments,
     max_audio_length_ms=10_000,
 )
+torchaudio.save("audio_1.wav", audio.unsqueeze(0).cpu(), generator.sample_rate)
 
 # 2. spkr
 audio = generator.generate(
@@ -85,6 +84,7 @@ audio = generator.generate(
     context=segments,
     max_audio_length_ms=10_000,
 )
+torchaudio.save("audio_2.wav", audio.unsqueeze(0).cpu(), generator.sample_rate)
 ```
 Custom use:
 ```python
@@ -130,7 +130,6 @@ audio = generator.generate(
     context=segments,
     max_audio_length_ms=10_000,
 )
-
 torchaudio.save("audio_1.wav", audio.unsqueeze(0).cpu(), generator.sample_rate)
 
 # 2. spkr
@@ -140,6 +139,7 @@ audio = generator.generate(
     context=segments,
     max_audio_length_ms=10_000,
 )
+torchaudio.save("audio_2.wav", audio.unsqueeze(0).cpu(), generator.sample_rate)
 ```
 
 # ORIGINAL DOCUMENTATION
