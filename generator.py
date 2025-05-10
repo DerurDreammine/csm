@@ -19,11 +19,12 @@ class Segment:
     audio: torch.Tensor
 
 
-def load_llama3_tokenizer():
+#def load_llama3_tokenizer():
+def load_llama3_tokenizer(tokenizer_name: str = "meta-llama/Llama-3.2-1B"):
     """
     https://github.com/huggingface/transformers/issues/22794#issuecomment-2092623992
     """
-    tokenizer_name = "meta-llama/Llama-3.2-1B"
+    #tokenizer_name = "meta-llama/Llama-3.2-1B"
     tokenizer = AutoTokenizer.from_pretrained(tokenizer_name)
     bos = tokenizer.bos_token
     eos = tokenizer.eos_token
@@ -37,14 +38,21 @@ def load_llama3_tokenizer():
 
 
 class Generator:
+    """
     def __init__(
         self,
         model: Model,
+    ):"""
+    def __init__(
+        self,
+        model: Model,
+        tokenizer_name: str = "meta-llama/Llama-3.2-1B",
     ):
         self._model = model
         self._model.setup_caches(1)
 
-        self._text_tokenizer = load_llama3_tokenizer()
+       # self._text_tokenizer = load_llama3_tokenizer()
+        self._text_tokenizer = load_llama3_tokenizer(tokenizer_name)
 
         device = next(model.parameters()).device
         mimi_weight = hf_hub_download(loaders.DEFAULT_REPO, loaders.MIMI_NAME)
@@ -167,10 +175,18 @@ class Generator:
 
         return audio
 
-
+"""
 def load_csm_1b(device: str = "cuda") -> Generator:
     model = Model.from_pretrained("sesame/csm-1b")
     model.to(device=device, dtype=torch.bfloat16)
 
     generator = Generator(model)
+    return generator
+"""
+
+def load_csm_1b(model_path: str = "sesame/csm-1", device: str = "cuda", tokenizer_name: str = "meta-llama/Llama-3.2-1B") -> Generator:
+    model = Model.from_pretrained(model_path)
+    model.to(device=device, dtype=torch.bfloat16)
+
+    generator = Generator(model, tokenizer_name)
     return generator

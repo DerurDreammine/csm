@@ -36,7 +36,13 @@ def watermark(
     encoded, _ = watermarker.encode_wav(audio_array_44khz, 44100, watermark_key, calc_sdr=False, message_sdr=36)
 
     output_sample_rate = min(44100, sample_rate)
+    import numpy as np
+    if isinstance(encoded, np.ndarray):
+        encoded = torch.from_numpy(encoded).to(torch.float32)
+    if encoded.ndim >= 2:
+        encoded = encoded.mean(dim=0)
     encoded = torchaudio.functional.resample(encoded, orig_freq=44100, new_freq=output_sample_rate)
+    #encoded = torchaudio.functional.resample(encoded, orig_freq=44100, new_freq=output_sample_rate)
     return encoded, output_sample_rate
 
 
